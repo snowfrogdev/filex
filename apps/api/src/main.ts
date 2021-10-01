@@ -1,8 +1,4 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-
+import open from 'open';
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
@@ -16,6 +12,8 @@ async function bootstrap() {
   await app.listen(port, () => {
     Logger.log('Listening at http://localhost:' + port + '/' + globalPrefix);
   });
+
+  open(`http://localhost:${port}?dirs=${process.argv.slice(2).join(',')}`);
 }
 
 bootstrap();

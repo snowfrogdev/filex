@@ -14,6 +14,7 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
+    "esModuleInterop": true,
     "paths": {
       "@file-explorer/api-interfaces": ["libs/api-interfaces/src/index.ts"]
     }

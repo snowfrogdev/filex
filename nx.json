@@ -35,10 +35,6 @@
     },
     "front-end": {
       "tags": []
-    },
-    "front-end-e2e": {
-      "tags": [],
-      "implicitDependencies": ["front-end"]
     }
   }
 }

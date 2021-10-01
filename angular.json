@@ -161,33 +161,6 @@
           }
         }
       }
-    },
-    "front-end-e2e": {
-      "root": "apps/front-end-e2e",
-      "sourceRoot": "apps/front-end-e2e/src",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/front-end-e2e/cypress.json",
-            "devServerTarget": "front-end:serve:development",
-            "tsConfig": "apps/front-end-e2e/tsconfig.json"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "front-end:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
-          "options": {
-            "lintFilePatterns": ["apps/front-end-e2e/**/*.{js,ts}"]
-          }
-        }
-      }
     }
   },
   "cli": {
