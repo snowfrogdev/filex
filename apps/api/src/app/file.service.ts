@@ -4,7 +4,7 @@ import { readdir, stat } from 'fs/promises';
 import path from 'path';
 
 @Injectable()
-export class AppService {
+export class FileService {
   async getDirectoryTrees(directories: string): Promise<FileItem[]> {
     const trees: Promise<FileItem>[] = [];
     directories

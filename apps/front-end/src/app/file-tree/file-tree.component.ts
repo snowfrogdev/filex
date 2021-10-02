@@ -1,7 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { FlatTreeControl } from '@angular/cdk/tree';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  MatTreeFlatDataSource,
+  MatTreeFlattener,
+} from '@angular/material/tree';
 import { FileItem } from '@file-explorer/api-interfaces';
+import { FileService } from '../file.service';
 
 /**
  * Flattened tree node that has been created from a FileNode through the flattener. Flattened
@@ -9,6 +13,7 @@ import { FileItem } from '@file-explorer/api-interfaces';
  */
 export interface FlatTreeNode {
   name: string;
+  path: string;
   type: string;
   level: number;
   expandable: boolean;
@@ -20,14 +25,7 @@ export interface FlatTreeNode {
   styleUrls: ['./file-tree.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileTreeComponent {
-  @Input()
-  set data(value: FileItem[] | null) {
-    if (value) {
-      this.dataSource.data = value;
-    }
-  }
-
+export class FileTreeComponent implements OnInit {
   /** The TreeControl controls the expand/collapse state of tree nodes.  */
   treeControl: FlatTreeControl<FlatTreeNode>;
 
@@ -37,24 +35,39 @@ export class FileTreeComponent {
   /** The MatTreeFlatDataSource connects the control and flattener to provide data. */
   dataSource: MatTreeFlatDataSource<FileItem, FlatTreeNode>;
 
-  constructor() {
+  expandedNodes: FlatTreeNode[] = [];
+
+  constructor(private fileService: FileService) {
     this.treeFlattener = new MatTreeFlattener(
       this.transformer,
       this.getLevel,
       this.isExpandable,
-      this.getChildren);
+      this.getChildren
+    );
 
     this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable);
-    this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+    this.dataSource = new MatTreeFlatDataSource(
+      this.treeControl,
+      this.treeFlattener
+    );
+  }
+
+  ngOnInit() {
+    this.fileService.trees.subscribe((trees) => {
+      this.saveExpandedNodes();
+      this.dataSource.data = trees;
+      this.restoreExpandedNodes();
+    });
   }
 
   /** Transform the data to something the tree can read. */
   transformer(node: FileItem, level: number): FlatTreeNode {
     return {
       name: node.name,
+      path: node.path,
       type: node.children ? 'folder' : 'file',
       level,
-      expandable: !!node.children
+      expandable: !!node.children,
     };
   }
 
@@ -76,5 +89,25 @@ export class FileTreeComponent {
   /** Get the children for the node. */
   getChildren(node: FileItem): FileItem[] | null | undefined {
     return node.children;
+  }
+
+  saveExpandedNodes() {
+    this.expandedNodes = [];
+    this.treeControl.dataNodes?.forEach((node) => {
+      if (node.expandable && this.treeControl.isExpanded(node)) {
+        this.expandedNodes.push(node);
+      }
+    });
+  }
+
+  restoreExpandedNodes() {
+    this.expandedNodes.forEach((expandedNode) => {
+      const node = this.treeControl.dataNodes.find(
+        (node) => node.path === expandedNode.path
+      );
+      if (node) {
+        this.treeControl.expand(node);
+      }
+    });
   }
 }

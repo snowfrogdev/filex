@@ -4,7 +4,7 @@ import { join } from 'path';
 
 import { AppController } from './app.controller';
 import { AppGateway } from './app.gateway';
-import { AppService } from './app.service';
+import { FileService } from './file.service';
 
 @Module({
   imports: [
@@ -14,6 +14,6 @@ import { AppService } from './app.service';
     })
   ],
   controllers: [AppController],
-  providers: [AppService, AppGateway],
+  providers: [FileService, AppGateway],
 })
 export class AppModule {}

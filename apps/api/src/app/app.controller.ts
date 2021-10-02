@@ -1,10 +1,10 @@
 import { FileItem } from '@file-explorer/api-interfaces';
 import { Controller, Get, HttpException, Query } from '@nestjs/common';
-import { AppService } from './app.service';
+import { FileService } from './file.service';
 
 @Controller('directory-trees')
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: FileService) {}
 
   @Get()
   getDirectoryTrees(
