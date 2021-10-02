@@ -1,15 +1,14 @@
-import { Controller, Get } from '@nestjs/common';
-
+import { Controller, Get, Query } from '@nestjs/common';
 import { Message } from '@file-explorer/api-interfaces';
-
 import { AppService } from './app.service';
 
-@Controller()
+@Controller('directory-trees')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get('hello')
-  getData(): Message {
-    return this.appService.getData();
+  @Get()
+  getDirectoryTrees(@Query('dirs') directories: string) {
+    console.log(directories);
+    //return this.appService.getDirectoryTrees();
   }
 }

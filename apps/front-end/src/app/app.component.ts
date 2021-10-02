@@ -1,7 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Message } from '@file-explorer/api-interfaces';
 import { skip } from 'rxjs/operators';
 
 @Component({
@@ -10,12 +9,15 @@ import { skip } from 'rxjs/operators';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  hello$ = this.http.get<Message>('/api/hello');
   constructor(private http: HttpClient, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.route.queryParams.pipe(skip(1)).subscribe((params) => {
-      console.log(params);
+      const dirs = params['dirs'].trim();
+      const options = params['dirs']
+        ? { params: new HttpParams().set('dirs', dirs) }
+        : {};
+      this.http.get<any>('/api/directory-trees', options).subscribe();
     });
   }
 }
