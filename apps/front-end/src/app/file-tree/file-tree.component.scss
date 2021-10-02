@@ -2,3 +2,7 @@
   color: #757575;
   margin-right: 5px;
 }
+
+.mat-tree-node + .tree-root {
+  border-top: 1px solid #e0e0e0;
+}

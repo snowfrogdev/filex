@@ -110,4 +110,8 @@ export class FileTreeComponent implements OnInit {
       }
     });
   }
+
+  isTreeRoot(node: FlatTreeNode): boolean {
+    return node.level === 0;
+  };
 }
