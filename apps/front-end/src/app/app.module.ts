@@ -1,3 +1,4 @@
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,11 +10,14 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { FileTreeComponent } from './file-tree/file-tree.component';
 
+const config: SocketIoConfig = { url: 'http://localhost:8988', options: {} };
+
 @NgModule({
   declarations: [AppComponent, FileTreeComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
+    SocketIoModule.forRoot(config),
     RouterModule.forRoot([]),
     BrowserAnimationsModule,
     MatTreeModule,

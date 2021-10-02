@@ -1,9 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { mergeMap, skip } from 'rxjs/operators';
 import { FileItem } from '@file-explorer/api-interfaces';
+import { Socket } from 'ngx-socket-io';
 import { Observable } from 'rxjs';
+import { mergeMap, skip, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'file-explorer-root',
@@ -11,10 +12,18 @@ import { Observable } from 'rxjs';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  trees!: Observable<FileItem[]>
-  constructor(private http: HttpClient, private route: ActivatedRoute) {}
+  trees!: Observable<FileItem[]>;
+  constructor(
+    private http: HttpClient,
+    private route: ActivatedRoute,
+    private socket: Socket
+  ) {}
 
   ngOnInit() {
+    this.socket
+      .fromEvent('directory-updated')
+      .subscribe((data) => console.log(data));
+
     this.trees = this.route.queryParams.pipe(
       skip(1),
       mergeMap((params: Params) => {
@@ -23,6 +32,12 @@ export class AppComponent implements OnInit {
           ? { params: new HttpParams().set('dirs', dirs) }
           : {};
         return this.http.get<FileItem[]>('/api/directory-trees', options);
+      }),
+      tap((trees) => {
+        this.socket.emit(
+          'watch-directory',
+          trees.map((tree) => tree.path)
+        );
       })
     );
   }
