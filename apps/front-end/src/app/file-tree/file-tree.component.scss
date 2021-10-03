@@ -6,3 +6,16 @@
 .mat-tree-node + .tree-root {
   border-top: 1px solid #e0e0e0;
 }
+
+.mat-tree-node:hover {
+  cursor: pointer;
+  background-color: rgb(247, 247, 247);
+
+  &.background-highlight {
+    background-color: lightgray;
+  }
+}
+
+.background-highlight {
+  background-color: lightgray;
+}

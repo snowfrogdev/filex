@@ -8,7 +8,6 @@ import {
 import chokidar from 'chokidar';
 import { Stats } from 'fs';
 import { Server } from 'socket.io';
-import { FileService } from './file.service';
 import nodePath from 'path';
 
 @WebSocketGateway(8988, { cors: { origin: '*' } })
@@ -16,11 +15,9 @@ export class AppGateway {
   @WebSocketServer()
   server: Server<FileEventsMap>;
 
-  constructor(private fileService: FileService) {}
-
   @SubscribeMessage('watch-directory')
   watchDirectory(@MessageBody() paths: string[]) {
-    const watcher = chokidar
+    chokidar
       .watch(paths, { ignoreInitial: true, alwaysStat: true })
       .on('all', (event, path, stats) => {
         switch (event) {

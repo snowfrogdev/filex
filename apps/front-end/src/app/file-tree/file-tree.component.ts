@@ -36,6 +36,7 @@ export class FileTreeComponent implements OnInit {
   dataSource: MatTreeFlatDataSource<FileItem, FlatTreeNode>;
 
   expandedNodes: FlatTreeNode[] = [];
+  selectedNode: FlatTreeNode | undefined;
 
   constructor(private fileService: FileService) {
     this.treeFlattener = new MatTreeFlattener(
