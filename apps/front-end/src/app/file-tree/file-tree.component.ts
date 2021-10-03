@@ -5,15 +5,18 @@ import {
   MatTreeFlattener,
 } from '@angular/material/tree';
 import { FileItem } from '@file-explorer/api-interfaces';
+import { Stats } from 'fs';
+import { Observable } from 'rxjs';
 import { FileService } from '../file.service';
 
 /**
- * Flattened tree node that has been created from a FileNode through the flattener. Flattened
+ * Flattened tree node that has been created from a FileItem through the flattener. Flattened
  * nodes include level index and whether they can be expanded or not.
  */
 export interface FlatTreeNode {
   name: string;
   path: string;
+  stats: Stats;
   type: string;
   level: number;
   expandable: boolean;
@@ -36,7 +39,7 @@ export class FileTreeComponent implements OnInit {
   dataSource: MatTreeFlatDataSource<FileItem, FlatTreeNode>;
 
   expandedNodes: FlatTreeNode[] = [];
-  selectedNode: FlatTreeNode | undefined;
+  selectedNode!: Observable<FlatTreeNode | null>;
 
   constructor(private fileService: FileService) {
     this.treeFlattener = new MatTreeFlattener(
@@ -59,6 +62,8 @@ export class FileTreeComponent implements OnInit {
       this.dataSource.data = trees;
       this.restoreExpandedNodes();
     });
+
+    this.selectedNode = this.fileService.selectedNode;
   }
 
   /** Transform the data to something the tree can read. */
@@ -66,6 +71,7 @@ export class FileTreeComponent implements OnInit {
     return {
       name: node.name,
       path: node.path,
+      stats: node.stats,
       type: node.children ? 'folder' : 'file',
       level,
       expandable: !!node.children,
@@ -114,5 +120,9 @@ export class FileTreeComponent implements OnInit {
 
   isTreeRoot(node: FlatTreeNode): boolean {
     return node.level === 0;
-  };
+  }
+
+  selectNode(node: FlatTreeNode) {
+    this.fileService.selectNode(node);
+  }
 }

@@ -1,0 +1,12 @@
+:host {
+  display: block;
+  min-width: 300px;
+  max-width: 600px;
+  padding: 2rem;
+}
+
+.details-text {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

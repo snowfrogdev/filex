@@ -3,8 +3,8 @@
     *matTreeNodeDef="let node"
     matTreeNodeToggle
     matTreeNodePadding
-    (click)="selectedNode = node"
-    [ngClass]="{ 'background-highlight': selectedNode === node }"
+    (click)="selectNode(node)"
+    [ngClass]="{ 'background-highlight': (selectedNode | async) === node }"
   >
     <button mat-icon-button disabled></button>
     <mat-icon class="type-icon" [attr.aria-label]="node.type + 'icon'">
@@ -18,8 +18,8 @@
     *matTreeNodeDef="let node; when: hasChild"
     matTreeNodePadding
     matTreeNodeToggle
-    (click)="selectedNode = node"
-    [ngClass]="{ 'background-highlight': selectedNode === node }"
+    (click)="selectNode(node)"
+    [ngClass]="{ 'background-highlight': (selectedNode | async) === node }"
   >
     <button
       disableRipple

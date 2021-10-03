@@ -8,10 +8,14 @@ import {
 import { Socket } from 'ngx-socket-io';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { FlatTreeNode } from './file-tree/file-tree.component';
 
 @Injectable({ providedIn: 'root' })
 export class FileService {
   readonly trees = new BehaviorSubject<FileItem[]>([]);
+  readonly selectedNode = new BehaviorSubject<FlatTreeNode | null>(null);
+  readonly detailsSideNavOpened = new BehaviorSubject<boolean>(false);
+
   constructor(private http: HttpClient, private socket: Socket) {}
 
   registerDirectories(directories: string) {
@@ -84,4 +88,14 @@ export class FileService {
 
     return undefined;
   }
+
+  selectNode(node: FlatTreeNode) {
+    this.selectedNode.next(node);
+    this.detailsSideNavOpened.next(true);
+  }
+
+  closeSideNav() {
+    this.detailsSideNavOpened.next(false);
+    this.selectedNode.next(null);
+  };
 }

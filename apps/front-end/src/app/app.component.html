@@ -1,1 +1,9 @@
-<file-explorer-file-tree></file-explorer-file-tree>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav-content>
+    <file-explorer-file-tree></file-explorer-file-tree>
+  </mat-sidenav-content>
+
+  <mat-sidenav #sidenav mode="side" position="end" [opened]="sidebarOpened | async">
+    <file-explorer-file-details></file-explorer-file-details>
+  </mat-sidenav>
+</mat-sidenav-container>

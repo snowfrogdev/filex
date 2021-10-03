@@ -1,3 +1,10 @@
+:host {
+  display: block;
+  min-width: 300px;
+  max-width: 600px;
+  margin: 50px auto;
+}
+
 .type-icon {
   color: #757575;
   margin-right: 5px;
@@ -18,4 +25,8 @@
 
 .background-highlight {
   background-color: lightgray;
+}
+
+.mat-tree {
+  background-color: #fafafa;
 }
