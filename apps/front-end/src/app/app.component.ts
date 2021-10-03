@@ -14,6 +14,7 @@ import { FileService } from './file.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
+  isLoading = false;
   sidebarOpened = false;
   selectedFileItem: FileDetails | null = null;
   trees: Observable<FileItem[]> = this.fileService.trees;
@@ -23,13 +24,17 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.fileService.subscribeToEvents();
     this.route.queryParams.pipe(skip(1)).subscribe((params: Params) => {
+      this.isLoading = true;
       const dirs = params['dirs'].trim();
       if (dirs) {
         this.fileService.registerDirectories(dirs);
       }
     });
 
-    this.trees.subscribe(() => this.updateSelectedFileItem());
+    this.trees.subscribe(() => {
+      this.updateSelectedFileItem();
+      this.isLoading = false;
+    });
   }
 
   closeSidebar() {

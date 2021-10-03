@@ -1,5 +1,6 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav-content>
+    <mat-progress-bar [style.visibility]="isLoading ? 'visible' : 'hidden'" mode="indeterminate"></mat-progress-bar>
     <file-explorer-file-tree
       [selectedFileItem]="selectedFileItem"
       [trees]="trees | async"
