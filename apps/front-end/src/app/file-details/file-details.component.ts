@@ -1,28 +1,33 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import prettyBytes from 'pretty-bytes';
-import { FlatTreeNode } from '../file-tree/file-tree.component';
-import { FileService } from '../file.service';
+
+export interface FileDetails {
+  name: string;
+  path: string;
+  stats: {
+    ino: number;
+    size: number;
+    birthtimeMs: number;
+    atimeMs: number;
+    mtimeMs: number;
+  };
+}
 
 @Component({
   selector: 'file-explorer-file-details',
   templateUrl: './file-details.component.html',
   styleUrls: ['./file-details.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileDetailsComponent implements OnInit {
-  selectedFile!: Observable<FlatTreeNode | null>
-  constructor(private fileService: FileService) { }
+export class FileDetailsComponent {
+  @Output() closeButtonClicked = new EventEmitter();
+  @Input() fileItem: FileDetails | null = null;
 
-  ngOnInit(): void {
-    this.selectedFile = this.fileService.selectedNode;
-  }
-
-  getFileSize(file: FlatTreeNode): string {
+  getFileSize(file: FileDetails): string {
     return prettyBytes(file.stats.size);
   }
 
-  closeSideNav() {
-    this.fileService.closeSideNav();
+  handleCloseButtonClick() {
+    this.closeButtonClicked.emit();
   }
 }

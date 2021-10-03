@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
+import { FileItem } from '@file-explorer/api-interfaces';
 import { Observable } from 'rxjs';
 import { skip } from 'rxjs/operators';
+import { FileDetails } from './file-details/file-details.component';
 import { FileService } from './file.service';
 
 @Component({
@@ -11,11 +13,11 @@ import { FileService } from './file.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
-  sidebarOpened!: Observable<boolean>;
-  constructor(
-    private route: ActivatedRoute,
-    private fileService: FileService
-  ) {}
+  sidebarOpened = false;
+  selectedFileItem: FileDetails | null = null;
+  trees: Observable<FileItem[]> = this.fileService.trees;
+
+  constructor(private route: ActivatedRoute, private fileService: FileService) { }
 
   ngOnInit() {
     this.fileService.subscribeToEvents();
@@ -26,6 +28,25 @@ export class AppComponent implements OnInit {
       }
     });
 
-    this.sidebarOpened = this.fileService.detailsSideNavOpened;
+    this.trees.subscribe(() => this.updateSelectedFileItem());
+  }
+
+  closeSidebar() {
+    this.sidebarOpened = false;
+  }
+
+  openSideBar(fileTreeNode: FileDetails) {
+    this.sidebarOpened = true;
+    this.selectedFileItem = fileTreeNode;
+  }
+
+  updateSelectedFileItem() {
+    if (this.selectedFileItem) {
+      this.selectedFileItem = this.fileService.findFileItemByIno(this.selectedFileItem.stats.ino);
+    }
+
+    if (!this.selectedFileItem) {
+      this.closeSidebar();
+    }
   }
 }

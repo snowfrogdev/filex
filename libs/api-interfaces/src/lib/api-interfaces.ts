@@ -15,7 +15,12 @@ export class FileAdded {
   constructor(readonly file: FileItem, readonly parentDir: string) {}
 }
 
+export class FileChanged {
+  constructor(readonly path: string, readonly stats: Stats) {}
+}
+
 export interface FileEventsMap {
   'file-deleted': (event: FileDeleted) => void;
   'file-added': (event: FileAdded) => void;
+  'file-changed': (event: FileChanged) => void;
 }

@@ -1,9 +1,16 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav-content>
-    <file-explorer-file-tree></file-explorer-file-tree>
+    <file-explorer-file-tree
+      [selectedFileItem]="selectedFileItem"
+      [trees]="trees | async"
+      (fileNodeClicked)="openSideBar($event)"
+    ></file-explorer-file-tree>
   </mat-sidenav-content>
 
-  <mat-sidenav #sidenav mode="side" position="end" [opened]="sidebarOpened | async">
-    <file-explorer-file-details></file-explorer-file-details>
+  <mat-sidenav #sidenav mode="side" position="end" [opened]="sidebarOpened">
+    <file-explorer-file-details
+      [fileItem]="selectedFileItem"
+      (closeButtonClicked)="closeSidebar()"
+    ></file-explorer-file-details>
   </mat-sidenav>
 </mat-sidenav-container>

@@ -31,6 +31,9 @@ export class AppGateway {
           case 'addDir':
             this.handleAddDir(path, stats);
             break;
+          case 'change':
+            this.handleChange(path, stats);
+            break;
         }
       });
   }
@@ -58,5 +61,9 @@ export class AppGateway {
       children: []
     };
     this.server.emit('file-added', { file, parentDir });
+  }
+
+  private handleChange(path: string, stats: Stats) {
+    this.server.emit('file-changed', { path, stats });
   }
 }

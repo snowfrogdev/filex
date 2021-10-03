@@ -1,19 +1,16 @@
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import {
-  MatTreeFlatDataSource,
-  MatTreeFlattener,
-} from '@angular/material/tree';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { FileItem } from '@file-explorer/api-interfaces';
 import { Stats } from 'fs';
-import { Observable } from 'rxjs';
+import { FileDetails } from '../file-details/file-details.component';
 import { FileService } from '../file.service';
 
 /**
  * Flattened tree node that has been created from a FileItem through the flattener. Flattened
  * nodes include level index and whether they can be expanded or not.
  */
-export interface FlatTreeNode {
+export interface FileTreeNode {
   name: string;
   path: string;
   stats: Stats;
@@ -28,46 +25,35 @@ export interface FlatTreeNode {
   styleUrls: ['./file-tree.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FileTreeComponent implements OnInit {
+export class FileTreeComponent {
+  @Input() set trees(value: FileItem[] | null) {
+    if (value) {
+      this.saveExpandedNodes();
+      this.dataSource.data = value;
+      this.restoreExpandedNodes();
+    }
+  }
+  @Input() selectedFileItem: FileDetails | null = null;
+  @Output() fileNodeClicked = new EventEmitter<FileTreeNode>();
+  expandedNodes: FileTreeNode[] = [];
+
   /** The TreeControl controls the expand/collapse state of tree nodes.  */
-  treeControl: FlatTreeControl<FlatTreeNode>;
+  treeControl: FlatTreeControl<FileTreeNode>;
 
   /** The TreeFlattener is used to generate the flat list of items from hierarchical data. */
-  treeFlattener: MatTreeFlattener<FileItem, FlatTreeNode>;
+  treeFlattener: MatTreeFlattener<FileItem, FileTreeNode>;
 
   /** The MatTreeFlatDataSource connects the control and flattener to provide data. */
-  dataSource: MatTreeFlatDataSource<FileItem, FlatTreeNode>;
-
-  expandedNodes: FlatTreeNode[] = [];
-  selectedNode!: Observable<FlatTreeNode | null>;
+  dataSource: MatTreeFlatDataSource<FileItem, FileTreeNode>;
 
   constructor(private fileService: FileService) {
-    this.treeFlattener = new MatTreeFlattener(
-      this.transformer,
-      this.getLevel,
-      this.isExpandable,
-      this.getChildren
-    );
-
+    this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl(this.getLevel, this.isExpandable);
-    this.dataSource = new MatTreeFlatDataSource(
-      this.treeControl,
-      this.treeFlattener
-    );
-  }
-
-  ngOnInit() {
-    this.fileService.trees.subscribe((trees) => {
-      this.saveExpandedNodes();
-      this.dataSource.data = trees;
-      this.restoreExpandedNodes();
-    });
-
-    this.selectedNode = this.fileService.selectedNode;
+    this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
   }
 
   /** Transform the data to something the tree can read. */
-  transformer(node: FileItem, level: number): FlatTreeNode {
+  transformer(node: FileItem, level: number): FileTreeNode {
     return {
       name: node.name,
       path: node.path,
@@ -79,17 +65,17 @@ export class FileTreeComponent implements OnInit {
   }
 
   /** Get the level of the node */
-  getLevel(node: FlatTreeNode): number {
+  getLevel(node: FileTreeNode): number {
     return node.level;
   }
 
   /** Get whether the node is expanded or not. */
-  isExpandable(node: FlatTreeNode): boolean {
+  isExpandable(node: FileTreeNode): boolean {
     return node.expandable;
   }
 
   /** Get whether the node has children or not. */
-  hasChild(index: number, node: FlatTreeNode): boolean {
+  hasChild(index: number, node: FileTreeNode): boolean {
     return node.expandable;
   }
 
@@ -109,20 +95,18 @@ export class FileTreeComponent implements OnInit {
 
   restoreExpandedNodes() {
     this.expandedNodes.forEach((expandedNode) => {
-      const node = this.treeControl.dataNodes.find(
-        (node) => node.path === expandedNode.path
-      );
+      const node = this.treeControl.dataNodes.find((node) => node.path === expandedNode.path);
       if (node) {
         this.treeControl.expand(node);
       }
     });
   }
 
-  isTreeRoot(node: FlatTreeNode): boolean {
+  isTreeRoot(node: FileTreeNode): boolean {
     return node.level === 0;
   }
 
-  selectNode(node: FlatTreeNode) {
-    this.fileService.selectNode(node);
+  handleFileNodeClick(node: FileTreeNode) {
+    this.fileNodeClicked.emit(node);
   }
 }

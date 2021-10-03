@@ -1,36 +1,37 @@
-<div *ngIf="selectedFile | async as file">
-  <div style="display: flex; justify-content: space-between;">
-    <h2>{{file.name}}</h2>
-    <button mat-icon-button (click)="closeSideNav()"><mat-icon>close</mat-icon></button>
+<div *ngIf="fileItem">
+  <div style="display: flex; justify-content: space-between">
+    <h2>{{ fileItem.name }}</h2>
+    <button mat-icon-button (click)="handleCloseButtonClick()">
+      <mat-icon>close</mat-icon>
+    </button>
   </div>
   <mat-divider></mat-divider>
   <mat-list>
     <mat-list-item>
       <mat-icon mat-list-icon>folder</mat-icon>
       <h4 mat-line>Location</h4>
-      <p mat-line>{{file.path}}</p>
+      <p mat-line>{{ fileItem.path }}</p>
     </mat-list-item>
     <mat-list-item>
       <mat-icon mat-list-icon>perm_media</mat-icon>
       <h4 mat-line>Size</h4>
-      <p mat-line>{{getFileSize(file)}}</p>
+      <p mat-line>{{ getFileSize(fileItem) }}</p>
     </mat-list-item>
     <mat-divider></mat-divider>
     <mat-list-item>
       <mat-icon mat-list-icon>date_range</mat-icon>
       <h4 mat-line>Created</h4>
-      <p mat-line>{{file.stats.birthtimeMs | date: 'medium'}}</p>
+      <p mat-line>{{ fileItem.stats.birthtimeMs | date: 'medium' }}</p>
     </mat-list-item>
     <mat-list-item>
       <mat-icon mat-list-icon>access_time</mat-icon>
       <h4 mat-line>Accessed</h4>
-      <p mat-line>{{file.stats.atimeMs | date: 'medium'}}</p>
+      <p mat-line>{{ fileItem.stats.atimeMs | date: 'medium' }}</p>
     </mat-list-item>
     <mat-list-item>
       <mat-icon mat-list-icon>update</mat-icon>
       <h4 mat-line>Modified</h4>
-      <p mat-line>{{file.stats.mtimeMs | date: 'medium'}}</p>
+      <p mat-line>{{ fileItem.stats.mtimeMs | date: 'medium' }}</p>
     </mat-list-item>
   </mat-list>
 </div>
-

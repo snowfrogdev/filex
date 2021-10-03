@@ -1,20 +1,13 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-  FileAdded,
-  FileDeleted,
-  FileItem,
-} from '@file-explorer/api-interfaces';
+import { FileAdded, FileChanged, FileDeleted, FileItem } from '@file-explorer/api-interfaces';
 import { Socket } from 'ngx-socket-io';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { FlatTreeNode } from './file-tree/file-tree.component';
 
 @Injectable({ providedIn: 'root' })
 export class FileService {
   readonly trees = new BehaviorSubject<FileItem[]>([]);
-  readonly selectedNode = new BehaviorSubject<FlatTreeNode | null>(null);
-  readonly detailsSideNavOpened = new BehaviorSubject<boolean>(false);
 
   constructor(private http: HttpClient, private socket: Socket) {}
 
@@ -34,29 +27,25 @@ export class FileService {
   }
 
   subscribeToEvents() {
-    this.socket
-      .fromEvent<FileDeleted>('file-deleted')
-      .subscribe((event) => this.handleFileDeleted(event));
+    this.socket.fromEvent<FileDeleted>('file-deleted').subscribe((event) => this.handleFileDeleted(event));
 
-    this.socket
-      .fromEvent<FileAdded>('file-added')
-      .subscribe((event) => this.handleFileAdded(event));
+    this.socket.fromEvent<FileAdded>('file-added').subscribe((event) => this.handleFileAdded(event));
+
+    this.socket.fromEvent<FileChanged>('file-changed').subscribe((event) => this.handleFileChanged(event));
   }
 
   private handleFileDeleted(event: FileDeleted): void {
     const parent = this.findParent(event.path);
     if (parent?.children) {
-      const index = parent.children.findIndex(
-        (file) => file.path === event.path
-      );
+      const index = parent.children.findIndex((file) => file.path === event.path);
       if (index !== -1) {
         parent.children.splice(index, 1);
-        this.trees.next(this.trees.value);
+        this.trees.next([...this.trees.value]);
       }
     }
   }
 
-  private findParent(path: string): FileItem | undefined {
+  private findParent(path: string): FileItem | null {
     const queue = [...this.trees.value];
     while (queue.length) {
       const current = queue.shift() as FileItem;
@@ -66,7 +55,7 @@ export class FileService {
       }
     }
 
-    return undefined;
+    return null;
   }
 
   private handleFileAdded(event: FileAdded): void {
@@ -74,11 +63,11 @@ export class FileService {
     if (parent?.children) {
       if (parent.children.some((file) => file.name === event.file.name)) return;
       parent.children.push(event.file);
-      this.trees.next(this.trees.value);
+      this.trees.next([...this.trees.value]);
     }
   }
 
-  private findFileItem(path: string): FileItem | undefined {
+  private findFileItem(path: string): FileItem | null {
     const queue = [...this.trees.value];
     while (queue.length) {
       const current = queue.shift() as FileItem;
@@ -86,16 +75,27 @@ export class FileService {
       if (current.children) queue.push(...current.children);
     }
 
-    return undefined;
+    return null;
   }
 
-  selectNode(node: FlatTreeNode) {
-    this.selectedNode.next(node);
-    this.detailsSideNavOpened.next(true);
+  private handleFileChanged(event: FileChanged): void {
+    const parent = this.findParent(event.path);
+    const fileItem = parent?.children?.find((file) => file.path === event.path);
+    if (fileItem && parent) {
+      const newFileItem = { ...fileItem, stats: event.stats };
+      parent.children = parent.children?.map((file) => (file.path === event.path ? newFileItem : file));
+      this.trees.next([...this.trees.value]);
+    }
   }
 
-  closeSideNav() {
-    this.detailsSideNavOpened.next(false);
-    this.selectedNode.next(null);
-  };
+  public findFileItemByIno(ino: number): FileItem | null {
+    const queue = [...this.trees.value];
+    while (queue.length) {
+      const current = queue.shift() as FileItem;
+      if (current.stats.ino === ino) return current;
+      if (current.children) queue.push(...current.children);
+    }
+
+    return null;
+  }
 }
