@@ -7,14 +7,15 @@ export interface FileItem {
   children?: FileItem[];
 }
 
-export interface FileEvent {
-  path: string;
+export class FileDeleted {
+  constructor(readonly path: string) {}
 }
 
-export class FileDeleted implements FileEvent {
-  constructor(readonly path: string) {}
+export class FileAdded {
+  constructor(readonly file: FileItem, readonly directory: string) {}
 }
 
 export interface FileEventsMap {
   'file-deleted': (event: FileDeleted) => void;
+  'file-added': (event: FileAdded) => void;
 }

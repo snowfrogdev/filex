@@ -1,6 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { FileDeleted, FileItem } from '@file-explorer/api-interfaces';
+import {
+  FileAdded,
+  FileDeleted,
+  FileItem,
+} from '@file-explorer/api-interfaces';
 import { Socket } from 'ngx-socket-io';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -29,6 +33,10 @@ export class FileService {
     this.socket
       .fromEvent<FileDeleted>('file-deleted')
       .subscribe((event) => this.handleFileDeleted(event));
+
+    this.socket
+      .fromEvent<FileAdded>('file-added')
+      .subscribe((event) => this.handleFileAdded(event));
   }
 
   private handleFileDeleted(event: FileDeleted): void {
@@ -39,7 +47,7 @@ export class FileService {
       );
       if (index !== -1) {
         parent.children.splice(index, 1);
-        this.trees.next([...this.trees.value]);
+        this.trees.next(this.trees.value);
       }
     }
   }
@@ -52,6 +60,26 @@ export class FileService {
         if (current.children.some((file) => file.path === path)) return current;
         queue.push(...current.children);
       }
+    }
+
+    return undefined;
+  }
+
+  private handleFileAdded(event: FileAdded): void {
+    const parent = this.findFileItem(event.directory);
+    if (parent?.children) {
+      if (parent.children.some((file) => file.name === event.file.name)) return;
+      parent.children.push(event.file);
+      this.trees.next(this.trees.value);
+    }
+  }
+
+  private findFileItem(path: string): FileItem | undefined {
+    const queue = [...this.trees.value];
+    while (queue.length) {
+      const current = queue.shift() as FileItem;
+      if (current.path === path) return current;
+      if (current.children) queue.push(...current.children);
     }
 
     return undefined;
