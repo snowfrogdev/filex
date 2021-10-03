@@ -12,7 +12,7 @@ export class FileDeleted {
 }
 
 export class FileAdded {
-  constructor(readonly file: FileItem, readonly directory: string) {}
+  constructor(readonly file: FileItem, readonly parentDir: string) {}
 }
 
 export interface FileEventsMap {

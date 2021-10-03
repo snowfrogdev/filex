@@ -66,7 +66,7 @@ export class FileService {
   }
 
   private handleFileAdded(event: FileAdded): void {
-    const parent = this.findFileItem(event.directory);
+    const parent = this.findFileItem(event.parentDir);
     if (parent?.children) {
       if (parent.children.some((file) => file.name === event.file.name)) return;
       parent.children.push(event.file);

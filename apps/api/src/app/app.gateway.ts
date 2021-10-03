@@ -23,14 +23,17 @@ export class AppGateway {
     const watcher = chokidar
       .watch(paths, { ignoreInitial: true, alwaysStat: true })
       .on('all', (event, path, stats) => {
-        console.log(event, path)
         switch (event) {
           case 'unlink':
           case 'unlinkDir':
             this.handleUnlink(path);
             break;
           case 'add':
-            this.handleAdd(path, stats)
+            this.handleAdd(path, stats);
+            break;
+          case 'addDir':
+            this.handleAddDir(path, stats);
+            break;
         }
       });
   }
@@ -40,12 +43,23 @@ export class AppGateway {
   }
 
   private handleAdd(path: string, stats: Stats) {
-    const directory = nodePath.dirname(path);
+    const parentDir = nodePath.dirname(path);
     const file: FileItem = {
       name: nodePath.basename(path),
       path,
       stats,
     }
-    this.server.emit('file-added', { file, directory });
+    this.server.emit('file-added', { file, parentDir });
+  }
+
+  private handleAddDir(path: string, stats: Stats) {
+    const parentDir = nodePath.dirname(path);
+    const file: FileItem = {
+      name: nodePath.basename(path),
+      path,
+      stats,
+      children: []
+    };
+    this.server.emit('file-added', { file, parentDir });
   }
 }
