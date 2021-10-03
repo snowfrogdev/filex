@@ -3,7 +3,7 @@
     <file-explorer-file-tree
       [selectedFileItem]="selectedFileItem"
       [trees]="trees | async"
-      (fileNodeClicked)="openSideBar($event)"
+      (fileNodeClicked)="handleFileNodeClick($event)"
     ></file-explorer-file-tree>
   </mat-sidenav-content>
 

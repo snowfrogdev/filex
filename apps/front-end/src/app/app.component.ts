@@ -4,6 +4,7 @@ import { FileItem } from '@file-explorer/api-interfaces';
 import { Observable } from 'rxjs';
 import { skip } from 'rxjs/operators';
 import { FileDetails } from './file-details/file-details.component';
+import { FileTreeNode } from './file-tree/file-tree.component';
 import { FileService } from './file.service';
 
 @Component({
@@ -17,7 +18,7 @@ export class AppComponent implements OnInit {
   selectedFileItem: FileDetails | null = null;
   trees: Observable<FileItem[]> = this.fileService.trees;
 
-  constructor(private route: ActivatedRoute, private fileService: FileService) { }
+  constructor(private route: ActivatedRoute, private fileService: FileService) {}
 
   ngOnInit() {
     this.fileService.subscribeToEvents();
@@ -35,8 +36,10 @@ export class AppComponent implements OnInit {
     this.sidebarOpened = false;
   }
 
-  openSideBar(fileTreeNode: FileDetails) {
-    this.sidebarOpened = true;
+  handleFileNodeClick(fileTreeNode: FileTreeNode) {
+    if (!fileTreeNode.expandable) {
+      this.sidebarOpened = true;
+    }
     this.selectedFileItem = fileTreeNode;
   }
 
