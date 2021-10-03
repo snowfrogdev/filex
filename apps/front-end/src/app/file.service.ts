@@ -63,8 +63,15 @@ export class FileService {
     if (parent?.children) {
       if (parent.children.some((file) => file.name === event.file.name)) return;
       parent.children.push(event.file);
+      parent.children.sort(this.sortByTypeAndName)
       this.trees.next([...this.trees.value]);
     }
+  }
+
+  private sortByTypeAndName(a: FileItem, b: FileItem): number {
+    if (a.children && !b.children) return -1;
+    if (!a.children && b.children) return 1;
+    return a.name.localeCompare(b.name);	
   }
 
   private findFileItem(path: string): FileItem | null {
@@ -84,6 +91,7 @@ export class FileService {
     if (fileItem && parent) {
       const newFileItem = { ...fileItem, stats: event.stats };
       parent.children = parent.children?.map((file) => (file.path === event.path ? newFileItem : file));
+      parent.children?.sort(this.sortByTypeAndName);
       this.trees.next([...this.trees.value]);
     }
   }
