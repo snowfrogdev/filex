@@ -76,7 +76,7 @@ export class AppComponent implements OnInit {
           .pipe(
             retry(1),
             catchError((error) => {
-              this.snackBar.open('Delete operation failed', 'Close', { duration: 5000 });
+              this.snackBar.open('Delete operation failed', 'Close', { duration: 3500 });
               this.isLoading.next(false);
               return throwError(error);
             })

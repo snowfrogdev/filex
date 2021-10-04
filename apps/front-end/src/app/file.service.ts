@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { FileAdded, FileChanged, FileDeleted, FileItem } from '@file-explorer/api-interfaces';
 import { Socket } from 'ngx-socket-io';
 import { BehaviorSubject } from 'rxjs';
@@ -9,7 +10,7 @@ import { tap } from 'rxjs/operators';
 export class FileService {
   readonly trees = new BehaviorSubject<FileItem[]>([]);
 
-  constructor(private http: HttpClient, private socket: Socket) {}
+  constructor(private http: HttpClient, private socket: Socket, private snackBar: MatSnackBar) {}
 
   registerDirectories(directories: string) {
     const options = { params: new HttpParams().set('dirs', directories) };
@@ -41,6 +42,7 @@ export class FileService {
       if (index !== -1) {
         parent.children.splice(index, 1);
         this.trees.next([...this.trees.value]);
+        this.snackBar.open(`DELETED - '${event.path}'`, 'Close', { duration: 3500 });
       }
     }
   }
@@ -65,6 +67,7 @@ export class FileService {
       parent.children.push(event.file);
       parent.children.sort(this.sortByTypeAndName);
       this.trees.next([...this.trees.value]);
+      this.snackBar.open(`CREATED - '${event.file.path}'`, 'Close', { duration: 3500 });
     }
   }
 
@@ -93,10 +96,11 @@ export class FileService {
       parent.children = parent.children?.map((file) => (file.path === event.path ? newFileItem : file));
       parent.children?.sort(this.sortByTypeAndName);
       this.trees.next([...this.trees.value]);
+      this.snackBar.open(`MODIFIED - '${event.path}'`, 'Close', { duration: 3500 });
     }
   }
 
-  public findFileItemByIno(ino: number): FileItem | null {
+  findFileItemByIno(ino: number): FileItem | null {
     const queue = [...this.trees.value];
     while (queue.length) {
       const current = queue.shift() as FileItem;
