@@ -2,7 +2,19 @@
   display: block;
   min-width: 300px;
   max-width: 600px;
-  margin: 50px auto;
+  margin: 20px auto 50px auto;
+
+  &:hover {
+    .add-buttons-group {
+      visibility: visible;
+      color: #757575;
+    }
+  }
+}
+
+.add-buttons-group {
+  visibility: hidden;
+  margin-bottom: 20px;
 }
 
 .type-icon {

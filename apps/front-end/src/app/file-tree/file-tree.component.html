@@ -1,10 +1,15 @@
+<div class="add-buttons-group" fxLayout fxLayoutAlign="end center">
+  <button mat-icon-button><mat-icon fontSet="material-icons-outlined">note_added</mat-icon></button>
+  <button mat-icon-button><mat-icon fontSet="material-icons-outlined">create_new_folder</mat-icon></button>
+</div>
+
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" cdkDropList cdkDropListSortingDisabled>
   <mat-tree-node
     [ngClass]="{ 'background-highlight': selectedFileItem?.stats?.ino === node.stats.ino }"
     *matTreeNodeDef="let node"
     matTreeNodePadding
     cdkDrag
-    [cdkDragData]=node
+    [cdkDragData]="node"
     (cdkDragStarted)="isDragging = true"
     (cdkDragEnded)="isDragging = false"
     (cdkDragDropped)="handleDrop($event)"
@@ -44,7 +49,7 @@
     *matTreeNodeDef="let node; when: hasChild"
     matTreeNodePadding
     cdkDrag
-    [cdkDragData]=node
+    [cdkDragData]="node"
     (cdkDragStarted)="isDragging = true"
     (cdkDragEnded)="isDragging = false"
     (cdkDragDropped)="handleDrop($event)"
