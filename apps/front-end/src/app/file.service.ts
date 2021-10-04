@@ -5,6 +5,7 @@ import { FileAdded, FileChanged, FileDeleted, FileItem } from '@file-explorer/ap
 import { Socket } from 'ngx-socket-io';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { FileDetails } from './file-details/file-details.component';
 
 @Injectable({ providedIn: 'root' })
 export class FileService {
@@ -113,6 +114,11 @@ export class FileService {
 
   deleteFileItem(path: string) {
     const options = { headers: { 'Content-Type': 'application/json' }, body: { path } };
-    return this.http.delete(`/api/file-items/`, options);
+    return this.http.delete(`/api/file-items`, options);
+  }
+
+  editFileName(file: FileDetails) {
+    const options = { headers: { 'Content-Type': 'application/json' } };
+    return this.http.patch(`api/file-items`, { path: file.path, newName: file.name }, options);
   }
 }

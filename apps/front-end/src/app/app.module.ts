@@ -4,7 +4,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -18,6 +20,7 @@ import { AppComponent } from './app.component';
 import { FileDetailsComponent } from './file-details/file-details.component';
 import { FileTreeComponent } from './file-tree/file-tree.component';
 import { FileDeleteDialogComponent } from './file-delete-dialog/file-delete-dialog.component';
+import { FormsModule } from '@angular/forms';
 
 const config: SocketIoConfig = { url: 'http://localhost:8988', options: {} };
 
@@ -30,10 +33,13 @@ const config: SocketIoConfig = { url: 'http://localhost:8988', options: {} };
     SocketIoModule.forRoot(config),
     RouterModule.forRoot([]),
     BrowserAnimationsModule,
+    FormsModule,
     MatButtonModule,
     MatDialogModule,
     MatDividerModule,
+    MatFormFieldModule,
     MatIconModule,
+    MatInputModule,
     MatListModule,
     MatProgressBarModule,
     MatSidenavModule,

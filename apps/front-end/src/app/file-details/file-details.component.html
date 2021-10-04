@@ -1,6 +1,23 @@
 <div *ngIf="fileItem">
-  <div style="display: flex; justify-content: space-between">
-    <h2>{{ fileItem.name }}</h2>
+  <div fxLayout fxLayoutAlign="space-between center">
+    <div fxLayout fxLayoutAlign="start center">
+      <h2 *ngIf="!editMode">{{ fileItem.name }}</h2>
+      <mat-form-field *ngIf="editMode">
+        <input
+          autofocus
+          #input
+          [value]="fileItem.name"
+          matInput
+          type="text"
+          (keyup.enter)="save(input.value)"
+          (keyup.esc)="editMode = false"
+        />
+        <button mat-icon-button matSuffix (click)="save(input.value)">
+          <mat-icon>check</mat-icon>
+        </button>
+      </mat-form-field>
+      <button *ngIf="!editMode" mat-icon-button (click)="editMode = true"><mat-icon>edit</mat-icon></button>
+    </div>
     <button mat-icon-button (click)="handleCloseButtonClick()">
       <mat-icon>close</mat-icon>
     </button>

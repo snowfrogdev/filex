@@ -1,6 +1,9 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav-content>
-    <mat-progress-bar [style.visibility]="(isLoading | async) ? 'visible' : 'hidden'" mode="indeterminate"></mat-progress-bar>
+    <mat-progress-bar
+      [style.visibility]="(isLoading | async) ? 'visible' : 'hidden'"
+      mode="indeterminate"
+    ></mat-progress-bar>
     <file-explorer-file-tree
       [selectedFileItem]="selectedFileItem"
       [trees]="trees | async"
@@ -9,10 +12,11 @@
     ></file-explorer-file-tree>
   </mat-sidenav-content>
 
-  <mat-sidenav #sidenav mode="side" position="end" [opened]="sidebarOpened">
+  <mat-sidenav #sidenav mode="side" position="end" [opened]="sidebarOpened" [disableClose]="true">
     <file-explorer-file-details
       [fileItem]="selectedFileItem"
       (closeButtonClicked)="closeSidebar()"
+      (editedName)="handleEditName($event)"
     ></file-explorer-file-details>
   </mat-sidenav>
 </mat-sidenav-container>

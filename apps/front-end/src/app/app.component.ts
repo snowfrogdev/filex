@@ -87,4 +87,20 @@ export class AppComponent implements OnInit {
       }
     });
   }
+
+  handleEditName(file: FileDetails) {
+    this.fileService
+      .editFileName(file)
+      .pipe(
+        retry(1),
+        catchError((error) => {
+          this.snackBar.open('Renaming operation failed', 'Close', { duration: 3500 });
+          this.isLoading.next(false);
+          return throwError(error);
+        })
+      )
+      .subscribe((_) => {
+        this.isLoading.next(false);
+      });
+  }
 }

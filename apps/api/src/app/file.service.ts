@@ -1,6 +1,6 @@
 import { FileItem } from '@file-explorer/api-interfaces';
 import { Injectable } from '@nestjs/common';
-import { readdir, rm, stat, unlink } from 'fs/promises';
+import { readdir, rename, rm, stat } from 'fs/promises';
 import path from 'path';
 
 @Injectable()
@@ -42,5 +42,13 @@ export class FileService {
 
   async deleteFileItem(path: string): Promise<void> {
     return rm(path, { recursive: true });
+  }
+
+  async renameFileItem(oldPath: string, newName: string): Promise<void> {
+    const dir = path.dirname(oldPath);
+    const newPath = path.resolve(dir, newName);
+    console.log(oldPath);
+    console.log(newPath);
+    return rename(oldPath, newPath);
   }
 }
