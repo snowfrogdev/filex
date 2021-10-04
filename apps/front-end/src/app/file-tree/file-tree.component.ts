@@ -35,6 +35,7 @@ export class FileTreeComponent {
   }
   @Input() selectedFileItem: FileDetails | null = null;
   @Output() fileNodeClicked = new EventEmitter<FileTreeNode>();
+  @Output() deleteClicked = new EventEmitter<FileTreeNode>();
   expandedNodes: FileTreeNode[] = [];
 
   /** The TreeControl controls the expand/collapse state of tree nodes.  */
@@ -109,4 +110,8 @@ export class FileTreeComponent {
   handleFileNodeClick(node: FileTreeNode) {
     this.fileNodeClicked.emit(node);
   }
+
+  handleDeleteClick(node: FileTreeNode) {
+    this.deleteClicked.emit(node);
+  };
 }

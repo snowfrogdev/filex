@@ -1,19 +1,26 @@
 import { FileItem } from '@file-explorer/api-interfaces';
-import { Controller, Get, HttpException, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, Param, Query } from '@nestjs/common';
 import { FileService } from './file.service';
 
-@Controller('directory-trees')
+@Controller('file-items')
 export class AppController {
   constructor(private readonly appService: FileService) {}
 
   @Get()
-  getDirectoryTrees(
-    @Query('dirs') directories: string | undefined
-  ): Promise<FileItem[]> {
+  async getFileItems(@Query('dirs') directories: string | undefined): Promise<FileItem[]> {
     if (!directories) {
       throw new HttpException('No directories provided', 400);
     }
 
-    return this.appService.getDirectoryTrees(directories);
+    return this.appService.getFileItems(directories);
+  }
+
+  @Delete()
+  async deleteFileItem(@Body('path') path: string): Promise<void> {
+    if (!path) {
+      throw new HttpException('No path provided', 400);
+    }
+
+    return this.appService.deleteFileItem(path);
   }
 }

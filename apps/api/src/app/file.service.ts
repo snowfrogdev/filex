@@ -1,15 +1,13 @@
 import { FileItem } from '@file-explorer/api-interfaces';
 import { Injectable } from '@nestjs/common';
-import { readdir, stat } from 'fs/promises';
+import { readdir, rm, stat, unlink } from 'fs/promises';
 import path from 'path';
 
 @Injectable()
 export class FileService {
-  async getDirectoryTrees(directories: string): Promise<FileItem[]> {
+  async getFileItems(directories: string): Promise<FileItem[]> {
     const trees: Promise<FileItem>[] = [];
-    directories
-      .split(',')
-      .forEach((directory) => trees.push(this.getDirectoryTree(directory)));
+    directories.split(',').forEach((directory) => trees.push(this.getDirectoryTree(directory)));
     return await Promise.all(trees);
   }
 
@@ -40,5 +38,9 @@ export class FileService {
     results.children?.push(...(await Promise.all(childDirectories)));
     results.children?.push(...childFiles);
     return results;
+  }
+
+  async deleteFileItem(path: string): Promise<void> {
+    return rm(path, { recursive: true });
   }
 }

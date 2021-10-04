@@ -1,34 +1,56 @@
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
   <mat-tree-node
     *matTreeNodeDef="let node"
-    matTreeNodeToggle
     matTreeNodePadding
-    (click)="handleFileNodeClick(node)"
     [ngClass]="{ 'background-highlight': selectedFileItem?.stats?.ino === node.stats.ino }"
+    fxLayout
+    fxLayoutAlign="space-between center"
   >
-    <button mat-icon-button disabled></button>
-    <mat-icon class="type-icon" [attr.aria-label]="node.type + 'icon'">
-      {{ node.type === 'file' ? 'description' : 'folder' }}
-    </mat-icon>
-    {{ node.name }}
+    <div
+      class="clickable-tree-node"
+      fxLayount
+      fxLayoutAlign="start center"
+      (click)="handleFileNodeClick(node)"
+      matTreeNodeToggle
+    >
+      <button mat-icon-button disabled></button>
+      <mat-icon class="type-icon" [attr.aria-label]="node.type + 'icon'">
+        {{ node.type === 'file' ? 'description' : 'folder' }}
+      </mat-icon>
+      {{ node.name }}
+    </div>
+    <button class="delete-button" mat-icon-button style="justify-content: flex-end" (click)="handleDeleteClick(node)">
+      <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+    </button>
   </mat-tree-node>
 
   <mat-tree-node
     [class.tree-root]="isTreeRoot(node)"
     *matTreeNodeDef="let node; when: hasChild"
     matTreeNodePadding
-    matTreeNodeToggle
-    (click)="handleFileNodeClick(node)"
     [ngClass]="{ 'background-highlight': selectedFileItem?.stats?.ino === node.stats.ino }"
+    fxLayout
+    fxLayoutAlign="space-between center"
   >
-    <button disableRipple mat-icon-button [attr.aria-label]="'Toggle ' + node.name">
-      <mat-icon class="mat-icon-rtl-mirror">
-        {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+    <div
+      class="clickable-tree-node"
+      fxLayount
+      fxLayoutAlign="start center"
+      (click)="handleFileNodeClick(node)"
+      matTreeNodeToggle
+    >
+      <button disableRipple mat-icon-button [attr.aria-label]="'Toggle ' + node.name">
+        <mat-icon class="mat-icon-rtl-mirror">
+          {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+        </mat-icon>
+      </button>
+      <mat-icon class="type-icon" [attr.aria-label]="node.type + 'icon'">
+        {{ treeControl.isExpanded(node) ? 'folder_open' : 'folder' }}
       </mat-icon>
+      {{ node.name }}
+    </div>
+    <button class="delete-button" mat-icon-button style="justify-content: flex-end" (click)="handleDeleteClick(node)">
+      <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
     </button>
-    <mat-icon class="type-icon" [attr.aria-label]="node.type + 'icon'">
-      {{ treeControl.isExpanded(node) ? 'folder_open' : 'folder' }}
-    </mat-icon>
-    {{ node.name }}
   </mat-tree-node>
 </mat-tree>

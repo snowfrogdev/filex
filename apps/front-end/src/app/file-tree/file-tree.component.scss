@@ -14,12 +14,25 @@
   border-top: 1px solid #e0e0e0;
 }
 
+.delete-button {
+  visibility: hidden;
+  color: #757575;
+}
+
+.clickable-tree-node {
+  width: 100%;
+}
+
 .mat-tree-node:hover {
   cursor: pointer;
   background-color: rgb(247, 247, 247);
 
   &.background-highlight {
     background-color: lightgray;
+  }
+
+  .delete-button {
+    visibility: visible;
   }
 }
 

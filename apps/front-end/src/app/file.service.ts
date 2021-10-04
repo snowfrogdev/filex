@@ -14,7 +14,7 @@ export class FileService {
   registerDirectories(directories: string) {
     const options = { params: new HttpParams().set('dirs', directories) };
     this.http
-      .get<FileItem[]>('/api/directory-trees', options)
+      .get<FileItem[]>('/api/file-items', options)
       .pipe(
         tap((trees) =>
           this.socket.emit(
@@ -63,7 +63,7 @@ export class FileService {
     if (parent?.children) {
       if (parent.children.some((file) => file.name === event.file.name)) return;
       parent.children.push(event.file);
-      parent.children.sort(this.sortByTypeAndName)
+      parent.children.sort(this.sortByTypeAndName);
       this.trees.next([...this.trees.value]);
     }
   }
@@ -71,7 +71,7 @@ export class FileService {
   private sortByTypeAndName(a: FileItem, b: FileItem): number {
     if (a.children && !b.children) return -1;
     if (!a.children && b.children) return 1;
-    return a.name.localeCompare(b.name);	
+    return a.name.localeCompare(b.name);
   }
 
   private findFileItem(path: string): FileItem | null {
@@ -105,5 +105,10 @@ export class FileService {
     }
 
     return null;
+  }
+
+  deleteFileItem(path: string) {
+    const options = { headers: { 'Content-Type': 'application/json' }, body: { path } };
+    return this.http.delete(`/api/file-items/`, options);
   }
 }
