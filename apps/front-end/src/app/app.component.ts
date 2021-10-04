@@ -103,4 +103,20 @@ export class AppComponent implements OnInit {
         this.isLoading.next(false);
       });
   }
+
+  handleFileMove(event: { nodeToMove: FileTreeNode; targetNode: FileTreeNode; }) {
+    this.fileService
+      .moveFileItem(event.nodeToMove.path, event.targetNode.path)
+      .pipe(
+        retry(1),
+        catchError((error) => {
+          this.snackBar.open('Move operation failed', 'Close', { duration: 3500 });
+          this.isLoading.next(false);
+          return throwError(error);
+        })
+      )
+      .subscribe((_) => {
+        this.isLoading.next(false);
+      });
+  };
 }

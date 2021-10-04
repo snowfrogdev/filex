@@ -47,8 +47,16 @@ export class FileService {
   async renameFileItem(oldPath: string, newName: string): Promise<void> {
     const dir = path.dirname(oldPath);
     const newPath = path.resolve(dir, newName);
-    console.log(oldPath);
-    console.log(newPath);
     return rename(oldPath, newPath);
+  }
+
+  async moveFileItem(oldPath: string, newPath: string): Promise<void> {
+    const name = path.basename(oldPath);
+    if ((await stat(newPath)).isDirectory()) {
+      return rename(oldPath, path.resolve(newPath, name))
+    }
+
+    newPath = path.dirname(newPath);
+    return rename(oldPath, path.resolve(newPath, name));
   }
 }

@@ -6,6 +6,7 @@ import { Socket } from 'ngx-socket-io';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { FileDetails } from './file-details/file-details.component';
+import { FileTreeNode } from './file-tree/file-tree.component';
 
 @Injectable({ providedIn: 'root' })
 export class FileService {
@@ -120,5 +121,10 @@ export class FileService {
   editFileName(file: FileDetails) {
     const options = { headers: { 'Content-Type': 'application/json' } };
     return this.http.patch(`api/file-items`, { path: file.path, newName: file.name }, options);
+  }
+
+  moveFileItem(from: string, to: string) {
+    const options = { headers: { 'Content-Type': 'application/json' } };
+    return this.http.put(`api/file-items`, { from, to }, options);
   }
 }

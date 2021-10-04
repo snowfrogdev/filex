@@ -13,6 +13,7 @@ export class AppGateway {
   @SubscribeMessage('watch-directory')
   watchDirectory(@MessageBody() paths: string[]) {
     chokidar.watch(paths, { ignoreInitial: true, alwaysStat: true }).on('all', (event, path, stats) => {
+      console.log(event, path);
       switch (event) {
         case 'unlink':
         case 'unlinkDir':

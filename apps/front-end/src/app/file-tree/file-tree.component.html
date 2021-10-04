@@ -1,10 +1,17 @@
-<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl" cdkDropList cdkDropListSortingDisabled>
   <mat-tree-node
+    [ngClass]="{ 'background-highlight': selectedFileItem?.stats?.ino === node.stats.ino }"
     *matTreeNodeDef="let node"
     matTreeNodePadding
-    [ngClass]="{ 'background-highlight': selectedFileItem?.stats?.ino === node.stats.ino }"
+    cdkDrag
+    [cdkDragData]=node
+    (cdkDragStarted)="isDragging = true"
+    (cdkDragEnded)="isDragging = false"
+    (cdkDragDropped)="handleDrop($event)"
     fxLayout
     fxLayoutAlign="space-between center"
+    (mouseenter)="nodeHoveredOver = node"
+    (mouseleave)="nodeHoveredOver = null"
   >
     <div
       class="clickable-tree-node"
@@ -22,15 +29,31 @@
     <button class="delete-button" mat-icon-button style="justify-content: flex-end" (click)="handleDeleteClick(node)">
       <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
     </button>
+
+    <div *cdkDragPreview fxLayout>
+      <mat-icon class="type-icon" [attr.aria-label]="node.type + 'icon'">
+        {{ node.type === 'file' ? 'description' : 'folder' }}
+      </mat-icon>
+      {{ node.name }}
+    </div>
   </mat-tree-node>
 
   <mat-tree-node
     [class.tree-root]="isTreeRoot(node)"
+    [ngClass]="{ 'background-highlight': selectedFileItem?.stats?.ino === node.stats.ino }"
     *matTreeNodeDef="let node; when: hasChild"
     matTreeNodePadding
-    [ngClass]="{ 'background-highlight': selectedFileItem?.stats?.ino === node.stats.ino }"
+    cdkDrag
+    [cdkDragData]=node
+    (cdkDragStarted)="isDragging = true"
+    (cdkDragEnded)="isDragging = false"
+    (cdkDragDropped)="handleDrop($event)"
     fxLayout
     fxLayoutAlign="space-between center"
+    fileExplorerHesitate
+    (hesitates)="handleHesitate(node)"
+    (mouseenter)="nodeHoveredOver = node"
+    (mouseleave)="nodeHoveredOver = null"
   >
     <div
       class="clickable-tree-node"
@@ -52,5 +75,12 @@
     <button class="delete-button" mat-icon-button style="justify-content: flex-end" (click)="handleDeleteClick(node)">
       <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
     </button>
+
+    <div *cdkDragPreview fxLayout>
+      <mat-icon class="type-icon" [attr.aria-label]="node.type + 'icon'">
+        {{ treeControl.isExpanded(node) ? 'folder_open' : 'folder' }}
+      </mat-icon>
+      {{ node.name }}
+    </div>
   </mat-tree-node>
 </mat-tree>

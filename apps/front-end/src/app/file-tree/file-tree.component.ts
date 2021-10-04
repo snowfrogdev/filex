@@ -1,3 +1,4 @@
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
@@ -36,6 +37,10 @@ export class FileTreeComponent {
   @Input() selectedFileItem: FileDetails | null = null;
   @Output() fileNodeClicked = new EventEmitter<FileTreeNode>();
   @Output() deleteClicked = new EventEmitter<FileTreeNode>();
+  @Output() movedFile = new EventEmitter<{ nodeToMove: FileTreeNode; targetNode: FileTreeNode; }>();
+  
+  isDragging = false;
+  nodeHoveredOver: FileTreeNode | null = null;
   expandedNodes: FileTreeNode[] = [];
 
   /** The TreeControl controls the expand/collapse state of tree nodes.  */
@@ -113,5 +118,20 @@ export class FileTreeComponent {
 
   handleDeleteClick(node: FileTreeNode) {
     this.deleteClicked.emit(node);
-  };
+  }
+
+  handleHesitate(node: FileTreeNode) {
+    if (this.isDragging) {
+      this.treeControl.expand(node);
+    }
+  }
+
+  handleDrop(event: CdkDragDrop<FileTreeNode>) {
+    const nodeToMove = event.item.data;
+    const targetNode = this.nodeHoveredOver;
+
+    if (targetNode) {
+      this.movedFile.next({ nodeToMove, targetNode });
+    }
+  }
 }
