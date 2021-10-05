@@ -1,5 +1,5 @@
 {
-  "name": "file-explorer",
+  "name": "filex",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
@@ -7,9 +7,18 @@
     "postinstall": "node ./decorate-angular-cli.js && ngcc --properties es2015 browser module main",
     "start": "nx serve",
     "build": "nx build",
-    "test": "nx test"
+    "test": "nx test",
+    "build-bin": "nx run-many build --target=build --configuration=production --projects=api,front-end --parallel && pkg ."
   },
   "private": true,
+  "bin": {
+    "filex": "dist/apps/api/main.js"
+  },
+  "pkg": {
+    "assets": "dist/apps/front-end/**/*",
+    "outputPath": "dist/bin",
+    "targets": ["node14-win-x64"]
+  },
   "dependencies": {
     "@angular/animations": "^12.2.0",
     "@angular/cdk": "^12.2.8",
@@ -70,6 +79,7 @@
     "eslint-plugin-cypress": "^2.10.3",
     "jest": "27.0.3",
     "jest-preset-angular": "9.0.7",
+    "pkg": "^5.3.3",
     "prettier": "^2.3.1",
     "ts-jest": "27.0.3",
     "typescript": "~4.3.5",

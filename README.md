@@ -1,105 +1,55 @@
+# FileX
+A file manager that runs in the browser.
 
+## Features
+FileX opens up a a file tree explorer in the browser. It is called from the command line and accepts one or more directory paths as arguments. On top of offering a live tree view of your filesystem, FileX has the following features:
+- Create a new file or folder
+- Edit a file or folder name
+- Delete a file or folder
+- Move a file or folder using drag and drop
+- Display detailed information about a selected file
 
-# FileExplorer
+## Running the app
+If you are on Windows, the fastest way to use the app is to download the executable file from the Release section on the Github repo for this project and save it to a location of your choice. 
 
-This project was generated using [Nx](https://nx.dev).
+Alternatively, after cloning this repo to your system, you will have to [build](#build) it before you can run the app.
 
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="450"></p>
+Open a terminal in the directory where the `filex.exe` is located (`dist/bin` if you build the project, a directory of your choice if you download it from the Release section).
 
-🔎 **Smart, Extensible Build Framework**
+As an optional (useful) step, you may want to add the directory to the PATH so that you can easily use the command from various directories. Here's how you would do it in Windows Command Prompt:
 
-## Quick Start & Documentation
+```
+set PATH=%PATH%;%CD%
+```
 
-[Nx Documentation](https://nx.dev/angular)
+To run the app:
+```
+filex [...dirs]
+```
 
-[10-minute video showing all Nx features](https://nx.dev/getting-started/intro)
+You can pass in any number of directories as argument, separated by a space. The command will work with absolute or relative paths. Example:
+```
+filex ./ foo ../../bar c:/some/directory
+```
 
-[Interactive Tutorial](https://nx.dev/tutorial/01-create-application)
-
-## Adding capabilities to your workspace
-
-Nx supports many plugins which add capabilities for developing different types of applications and different tools.
-
-These capabilities include generating applications, libraries, etc as well as the devtools to test, and build projects as well.
-
-Below are our core plugins:
-
-- [Angular](https://angular.io)
-  - `ng add @nrwl/angular`
-- [React](https://reactjs.org)
-  - `ng add @nrwl/react`
-- Web (no framework frontends)
-  - `ng add @nrwl/web`
-- [Nest](https://nestjs.com)
-  - `ng add @nrwl/nest`
-- [Express](https://expressjs.com)
-  - `ng add @nrwl/express`
-- [Node](https://nodejs.org)
-  - `ng add @nrwl/node`
-
-There are also many [community plugins](https://nx.dev/community) you could add.
-
-## Generate an application
-
-Run `ng g @nrwl/angular:app my-app` to generate an application.
-
-> You can use any of the plugins above to generate applications as well.
-
-When using Nx, you can create multiple applications and libraries in the same workspace.
-
-## Generate a library
-
-Run `ng g @nrwl/angular:lib my-lib` to generate a library.
-
-> You can also use any of the plugins above to generate libraries as well.
-
-Libraries are shareable across libraries and applications. They can be imported from `@file-explorer/mylib`.
-
-## Development server
-
-Run `ng serve my-app` for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng g component my-component --project=my-app` to generate a new component.
+If you don't pass in any arguments, the app will lauch with the current directory as the only target.
 
 ## Build
+If you want to build the project, you will need to have [NodeJS](https://nodejs.org/en/download/) verson 14 or higher installed on your system.
 
-Run `ng build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Start by installing the projects dependencies. This step will take a while as I have made use of many libraries and frameworks to save on development time.
+```
+npm install
+```
 
-## Running unit tests
+Then you are ready to build the project. This step will also take a while. Don't be alarmed if you see some warnings and progress seems to be slow, just let it run its course.
+```
+npm run build-bin
+```
 
-Run `ng test my-app` to execute the unit tests via [Jest](https://jestjs.io).
+Once this step is done, you will find the Windows executable in `dist/bin`.
 
-Run `nx affected:test` to execute the unit tests affected by a change.
-
-## Running end-to-end tests
-
-Run `ng e2e my-app` to execute the end-to-end tests via [Cypress](https://www.cypress.io).
-
-Run `nx affected:e2e` to execute the end-to-end tests affected by a change.
-
-## Understand your workspace
-
-Run `nx dep-graph` to see a diagram of the dependencies of your projects.
-
-## Further help
-
-Visit the [Nx Documentation](https://nx.dev/angular) to learn more.
-
-
-
-
-
-
-## ☁ Nx Cloud
-
-### Distributed Computation Caching & Distributed Task Execution
-
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-cloud-card.png"></p>
-
-Nx Cloud pairs with Nx in order to enable you to build and test code more rapidly, by up to 10 times. Even teams that are new to Nx can connect to Nx Cloud and start saving time instantly.
-
-Teams using Nx gain the advantage of building full-stack applications with their preferred framework alongside Nx’s advanced code generation and project dependency graph, plus a unified experience for both frontend and backend developers.
-
-Visit [Nx Cloud](https://nx.app/) to learn more.
+If you are not on Windows, you can run the app using NodeJs and the build located in `dist/apps/api`. You can run the app on Linux, Mac or Windows, from this directory by doing:
+```
+node main.js [...dirs]
+```
