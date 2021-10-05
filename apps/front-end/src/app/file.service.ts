@@ -6,27 +6,24 @@ import { Socket } from 'ngx-socket-io';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { FileDetails } from './file-details/file-details.component';
-import { FileTreeNode } from './file-tree/file-tree.component';
 
 @Injectable({ providedIn: 'root' })
 export class FileService {
-  readonly trees = new BehaviorSubject<FileItem[]>([]);
+  trees = new BehaviorSubject<FileItem[]>([]);
 
   constructor(private http: HttpClient, private socket: Socket, private snackBar: MatSnackBar) {}
 
   registerDirectories(directories: string) {
     const options = { params: new HttpParams().set('dirs', directories) };
-    this.http
-      .get<FileItem[]>('/api/file-items', options)
-      .pipe(
-        tap((trees) =>
-          this.socket.emit(
-            'watch-directory',
-            trees.map((tree) => tree.path)
-          )
+    return this.http.get<FileItem[]>('/api/file-items', options).pipe(
+      tap((trees) =>
+        this.socket.emit(
+          'watch-directory',
+          trees.map((tree) => tree.path)
         )
-      )
-      .subscribe((trees) => this.trees.next(trees));
+      ),
+      tap((trees) => this.trees.next(trees))
+    );
   }
 
   subscribeToEvents() {
@@ -43,7 +40,7 @@ export class FileService {
       this.trees.next(newTree);
       return;
     }
-    
+
     const parent = this.findParent(event.path);
     if (parent?.children) {
       const index = parent.children.findIndex((file) => file.path === event.path);

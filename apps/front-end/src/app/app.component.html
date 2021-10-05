@@ -4,7 +4,9 @@
       [style.visibility]="(isLoading | async) ? 'visible' : 'hidden'"
       mode="indeterminate"
     ></mat-progress-bar>
+    <file-explorer-loading-screen *ngIf="(initialLoad | async)"></file-explorer-loading-screen>
     <file-explorer-file-tree
+      *ngIf="(initialLoad | async) === false"
       [selectedFileItem]="selectedFileItem"
       [trees]="trees | async"
       (fileNodeClicked)="handleFileNodeClick($event)"

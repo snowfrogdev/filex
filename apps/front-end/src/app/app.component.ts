@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Params } from '@angular/router';
 import { FileItem } from '@file-explorer/api-interfaces';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError, retry, skip } from 'rxjs/operators';
+import { catchError, mergeMap, retry, skip } from 'rxjs/operators';
 import { FileAddDialogComponent } from './file-add-dialog/file-add-dialog.component';
 import { FileDeleteDialogComponent } from './file-delete-dialog/file-delete-dialog.component';
 import { FileDetails } from './file-details/file-details.component';
@@ -19,6 +19,7 @@ import { FileService } from './file.service';
 })
 export class AppComponent implements OnInit {
   isLoading = new BehaviorSubject(false);
+  initialLoad = new BehaviorSubject(false);
   sidebarOpened = false;
   selectedFileItem: FileDetails | null = null;
   trees: Observable<FileItem[]> = this.fileService.trees;
@@ -32,13 +33,30 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.fileService.subscribeToEvents();
-    this.route.queryParams.pipe(skip(1)).subscribe((params: Params) => {
-      this.isLoading.next(true);
-      const dirs = params['dirs'].trim();
-      if (dirs) {
-        this.fileService.registerDirectories(dirs);
-      }
-    });
+    this.route.queryParams
+      .pipe(
+        skip(1),
+        mergeMap((params: Params) => {
+          this.isLoading.next(true);
+          this.initialLoad.next(true);
+          const dirs = params['dirs'].trim();
+          return this.fileService.registerDirectories(dirs ? dirs : './');
+        }),
+        catchError((error) => {
+          this.snackBar.open(
+            'Oops, looks like we tried to bite off more than we can chew. Try again with other directories.',
+            'Close',
+            { duration: 3500 }
+          );
+          this.isLoading.next(false);
+          this.initialLoad.next(false);
+          return throwError(error);
+        })
+      )
+      .subscribe((_) => {
+        this.isLoading.next(false);
+        this.initialLoad.next(false);
+      });
 
     this.trees.subscribe(() => {
       this.updateSelectedFileItem();

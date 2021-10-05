@@ -3,10 +3,10 @@
   <p>in directory '{{data.directory}}'</p>
   <mat-form-field appearance="fill">
     <mat-label>{{data.type}} name</mat-label>
-    <input matInput [(ngModel)]="fileName" (keyup.enter)="dialogRef.close(fileName)">
+    <input cdkFocusInitial matInput [(ngModel)]="fileName" (keyup.enter)="dialogRef.close(fileName)">
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="dialogRef.close()">Cancel</button>
-  <button mat-button [mat-dialog-close]="fileName" cdkFocusInitial>Ok</button>
+  <button mat-button [mat-dialog-close]="fileName">Ok</button>
 </div>

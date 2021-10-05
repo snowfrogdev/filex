@@ -24,6 +24,7 @@ import { FileAddDialogComponent } from './file-add-dialog/file-add-dialog.compon
 import { FileDeleteDialogComponent } from './file-delete-dialog/file-delete-dialog.component';
 import { FileDetailsComponent } from './file-details/file-details.component';
 import { FileTreeComponent } from './file-tree/file-tree.component';
+import { LoadingScreenComponent } from './loading-screen/loading-screen.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:8988', options: {} };
 
@@ -35,6 +36,7 @@ const config: SocketIoConfig = { url: 'http://localhost:8988', options: {} };
     FileDeleteDialogComponent,
     HesitateDirective,
     FileAddDialogComponent,
+    LoadingScreenComponent,
   ],
   imports: [
     BrowserModule,
