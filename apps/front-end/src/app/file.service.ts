@@ -38,6 +38,12 @@ export class FileService {
   }
 
   private handleFileDeleted(event: FileDeleted): void {
+    if (this.isRootDir(event.path)) {
+      const newTree = this.trees.value.filter((rootDir) => rootDir.path !== event.path);
+      this.trees.next(newTree);
+      return;
+    }
+    
     const parent = this.findParent(event.path);
     if (parent?.children) {
       const index = parent.children.findIndex((file) => file.path === event.path);
@@ -47,6 +53,10 @@ export class FileService {
         this.snackBar.open(`DELETED - '${event.path}'`, 'Close', { duration: 3500 });
       }
     }
+  }
+
+  private isRootDir(path: string): boolean {
+    return this.trees.value.some((rootDir) => rootDir.path === path);
   }
 
   private findParent(path: string): FileItem | null {
