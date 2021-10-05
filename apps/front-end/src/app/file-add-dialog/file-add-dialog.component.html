@@ -1,12 +1,12 @@
-<h1 mat-dialog-title>Create new file</h1>
+<h1 mat-dialog-title>Create new {{data.type}}</h1>
 <div mat-dialog-content>
-  <p>in directory '{{directory}}'</p>
+  <p>in directory '{{data.directory}}'</p>
   <mat-form-field appearance="fill">
-    <mat-label>File name</mat-label>
-    <input matInput [(ngModel)]="fileName">
+    <mat-label>{{data.type}} name</mat-label>
+    <input matInput [(ngModel)]="fileName" (keyup.enter)="dialogRef.close(fileName)">
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button (click)="dialogRef.close()">Cancel</button>
   <button mat-button [mat-dialog-close]="fileName" cdkFocusInitial>Ok</button>
 </div>

@@ -5,9 +5,10 @@
   margin: 20px auto 50px auto;
 
   &:hover {
-    .add-buttons-group {
+    .add-buttons-group.show-button-group {
       visibility: visible;
       color: #757575;
+      margin-bottom: 20px;
     }
   }
 }
@@ -15,6 +16,11 @@
 .add-buttons-group {
   visibility: hidden;
   margin-bottom: 20px;
+
+  &.show-button-group {
+    visibility: hidden;
+    margin-bottom: 20px;
+  }
 }
 
 .type-icon {

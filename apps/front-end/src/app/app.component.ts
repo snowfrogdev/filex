@@ -121,17 +121,20 @@ export class AppComponent implements OnInit {
       });
   }
 
-  handleFileAddClick() {
-    const dialogRef = this.dialog.open(FileAddDialogComponent, { data: this.selectedFileItem?.path, disableClose: true });
+  handleFileItemAddClick(type: 'file' | 'directory') {
+    const dialogRef = this.dialog.open(FileAddDialogComponent, {
+      data: { type, directory: this.selectedFileItem?.path },
+      disableClose: true,
+    });
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.isLoading.next(true);
         this.fileService
-          .addFileItem(result, this.selectedFileItem?.path)
+          .addFileItem(result, this.selectedFileItem?.path, type)
           .pipe(
             retry(1),
             catchError((error) => {
-              this.snackBar.open('Create file operation failed', 'Close', { duration: 3500 });
+              this.snackBar.open(`Create ${type} operation failed`, 'Close', { duration: 3500 });
               this.isLoading.next(false);
               return throwError(error);
             })

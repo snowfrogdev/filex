@@ -37,9 +37,9 @@ export class FileTreeComponent {
   @Input() selectedFileItem: FileDetails | null = null;
   @Output() fileNodeClicked = new EventEmitter<FileTreeNode>();
   @Output() deleteClicked = new EventEmitter<FileTreeNode>();
-  @Output() movedFile = new EventEmitter<{ nodeToMove: FileTreeNode; targetNode: FileTreeNode; }>();
-  @Output() fileAddClicked = new EventEmitter();
-  
+  @Output() movedFile = new EventEmitter<{ nodeToMove: FileTreeNode; targetNode: FileTreeNode }>();
+  @Output() fileItemAddClicked = new EventEmitter<'file' | 'directory'>();
+
   isDragging = false;
   nodeHoveredOver: FileTreeNode | null = null;
   expandedNodes: FileTreeNode[] = [];
@@ -136,7 +136,7 @@ export class FileTreeComponent {
     }
   }
 
-  handleFileAddClick() {
-    this.fileAddClicked.emit();
+  handleFileItemAddClick(type: 'file' | 'directory') {
+    this.fileItemAddClicked.emit(type);
   }
 }

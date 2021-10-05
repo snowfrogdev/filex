@@ -1,6 +1,6 @@
-<div [ngStyle]="{'visibility': selectedFileItem ? 'visible' : 'hidden'}" class="add-buttons-group" fxLayout fxLayoutAlign="end center">
-  <button mat-icon-button (click)="handleFileAddClick()"><mat-icon fontSet="material-icons-outlined">note_added</mat-icon></button>
-  <button mat-icon-button><mat-icon fontSet="material-icons-outlined">create_new_folder</mat-icon></button>
+<div [ngClass]="{'show-button-group': selectedFileItem }" class="add-buttons-group" fxLayout fxLayoutAlign="end center">
+  <button mat-icon-button (click)="handleFileItemAddClick('file')"><mat-icon fontSet="material-icons-outlined">note_added</mat-icon></button>
+  <button mat-icon-button (click)="handleFileItemAddClick('directory')"><mat-icon fontSet="material-icons-outlined">create_new_folder</mat-icon></button>
 </div>
 
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" cdkDropList cdkDropListSortingDisabled>

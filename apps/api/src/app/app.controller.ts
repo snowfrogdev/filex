@@ -42,13 +42,16 @@ export class AppController {
     return this.appService.moveFileItem(path, newPath);
   }
 
-  @Post('file')
-  async createFile(@Body('path') path: string, @Body('name') name: string): Promise<void> {
-    console.log(path, name);
+  @Post()
+  async createFileItem(
+    @Body('path') path: string,
+    @Body('name') name: string,
+    @Body('type') type: 'file' | 'directory'
+  ): Promise<void | string> {
     if (!path || !name) {
       throw new HttpException('No path or name provided', 400);
     }
 
-    return this.appService.createFile(path, name);
+    return this.appService.createFileItem(path, name, type);
   }
 }

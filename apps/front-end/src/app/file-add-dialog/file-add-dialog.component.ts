@@ -8,9 +8,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class FileAddDialogComponent {
   fileName = '';
-  constructor(public dialogRef: MatDialogRef<FileAddDialogComponent>, @Inject(MAT_DIALOG_DATA) public directory: string) {}
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
+  constructor(
+    public dialogRef: MatDialogRef<FileAddDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { type: string; directory: string }
+  ) {}
 }
