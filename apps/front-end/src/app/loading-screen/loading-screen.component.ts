@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { interval, Observable} from 'rxjs';
+import { Observable, timer} from 'rxjs';
 import { map } from 'rxjs/operators';
 
 const messages = [
@@ -25,7 +25,7 @@ export class LoadingScreenComponent implements OnInit {
 
   ngOnInit() {
 
-    this.loadingMessage = interval(8000).pipe(
+    this.loadingMessage = timer(0, 8000).pipe(
       map(_ => messages[this.index++ % messages.length])
     );
     
