@@ -20,6 +20,7 @@ import { RouterModule } from '@angular/router';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { AppComponent } from './app.component';
 import { HesitateDirective } from './directives/hesitate.directive';
+import { FileAddDialogComponent } from './file-add-dialog/file-add-dialog.component';
 import { FileDeleteDialogComponent } from './file-delete-dialog/file-delete-dialog.component';
 import { FileDetailsComponent } from './file-details/file-details.component';
 import { FileTreeComponent } from './file-tree/file-tree.component';
@@ -27,7 +28,14 @@ import { FileTreeComponent } from './file-tree/file-tree.component';
 const config: SocketIoConfig = { url: 'http://localhost:8988', options: {} };
 
 @NgModule({
-  declarations: [AppComponent, FileTreeComponent, FileDetailsComponent, FileDeleteDialogComponent, HesitateDirective],
+  declarations: [
+    AppComponent,
+    FileTreeComponent,
+    FileDetailsComponent,
+    FileDeleteDialogComponent,
+    HesitateDirective,
+    FileAddDialogComponent,
+  ],
   imports: [
     BrowserModule,
     DragDropModule,

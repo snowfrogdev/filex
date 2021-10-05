@@ -1,5 +1,5 @@
 import { FileItem } from '@file-explorer/api-interfaces';
-import { Body, Controller, Delete, Get, HttpException, Patch, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, Patch, Post, Put, Query } from '@nestjs/common';
 import { FileService } from './file.service';
 
 @Controller('file-items')
@@ -40,5 +40,15 @@ export class AppController {
     }
 
     return this.appService.moveFileItem(path, newPath);
+  }
+
+  @Post('file')
+  async createFile(@Body('path') path: string, @Body('name') name: string): Promise<void> {
+    console.log(path, name);
+    if (!path || !name) {
+      throw new HttpException('No path or name provided', 400);
+    }
+
+    return this.appService.createFile(path, name);
   }
 }

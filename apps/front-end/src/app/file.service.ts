@@ -127,4 +127,9 @@ export class FileService {
     const options = { headers: { 'Content-Type': 'application/json' } };
     return this.http.put(`api/file-items`, { from, to }, options);
   }
+
+  addFileItem(name: string, path: string | undefined) {
+    const options = { headers: { 'Content-Type': 'application/json' } };
+    return this.http.post(`api/file-items/file`, { name, path }, options);
+  }
 }

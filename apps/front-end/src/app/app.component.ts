@@ -5,6 +5,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { FileItem } from '@file-explorer/api-interfaces';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, retry, skip } from 'rxjs/operators';
+import { FileAddDialogComponent } from './file-add-dialog/file-add-dialog.component';
 import { FileDeleteDialogComponent } from './file-delete-dialog/file-delete-dialog.component';
 import { FileDetails } from './file-details/file-details.component';
 import { FileTreeNode } from './file-tree/file-tree.component';
@@ -104,7 +105,7 @@ export class AppComponent implements OnInit {
       });
   }
 
-  handleFileMove(event: { nodeToMove: FileTreeNode; targetNode: FileTreeNode; }) {
+  handleFileMove(event: { nodeToMove: FileTreeNode; targetNode: FileTreeNode }) {
     this.fileService
       .moveFileItem(event.nodeToMove.path, event.targetNode.path)
       .pipe(
@@ -118,5 +119,27 @@ export class AppComponent implements OnInit {
       .subscribe((_) => {
         this.isLoading.next(false);
       });
-  };
+  }
+
+  handleFileAddClick() {
+    const dialogRef = this.dialog.open(FileAddDialogComponent, { data: this.selectedFileItem?.path, disableClose: true });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.isLoading.next(true);
+        this.fileService
+          .addFileItem(result, this.selectedFileItem?.path)
+          .pipe(
+            retry(1),
+            catchError((error) => {
+              this.snackBar.open('Create file operation failed', 'Close', { duration: 3500 });
+              this.isLoading.next(false);
+              return throwError(error);
+            })
+          )
+          .subscribe((_) => {
+            this.isLoading.next(false);
+          });
+      }
+    });
+  }
 }

@@ -1,6 +1,6 @@
 import { FileItem } from '@file-explorer/api-interfaces';
 import { Injectable } from '@nestjs/common';
-import { readdir, rename, rm, stat } from 'fs/promises';
+import { readdir, rename, rm, stat, writeFile } from 'fs/promises';
 import path from 'path';
 
 @Injectable()
@@ -53,10 +53,17 @@ export class FileService {
   async moveFileItem(oldPath: string, newPath: string): Promise<void> {
     const name = path.basename(oldPath);
     if ((await stat(newPath)).isDirectory()) {
-      return rename(oldPath, path.resolve(newPath, name))
+      return rename(oldPath, path.resolve(newPath, name));
     }
 
     newPath = path.dirname(newPath);
     return rename(oldPath, path.resolve(newPath, name));
+  }
+
+  async createFile(referencePath: string, name: string): Promise<void> {
+    if(!(await stat(referencePath)).isDirectory()) {
+      referencePath = path.dirname(referencePath);
+    }
+    return await writeFile(path.resolve(referencePath, name), '');
   }
 }
