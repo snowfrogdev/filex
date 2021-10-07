@@ -21,12 +21,10 @@ const messages = [
 })
 export class LoadingScreenComponent implements OnInit {
   loadingMessage!: Observable<string>;
-  index = 0;
 
   ngOnInit() {
-
     this.loadingMessage = timer(0, 8000).pipe(
-      map(_ => messages[this.index++ % messages.length])
+      map(index => messages[index % messages.length])
     );
     
   }

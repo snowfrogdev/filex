@@ -30,7 +30,7 @@ To run the app:
 filex [...dirs]
 ```
 
-You can pass in any number of directories as argument, separated by a space. The command will work with absolute or relative paths. Example:
+You can pass in any number of directories as arguments, separated by a space. The command will work with absolute or relative paths. Example:
 ```
 filex ./ foo ../../bar c:/some/directory
 ```
@@ -40,7 +40,7 @@ If you don't pass in any arguments, the app will lauch with the current director
 ## Build
 If you want to build the project, you will need to have [NodeJS](https://nodejs.org/en/download/) verson 14 or higher installed on your system.
 
-Start by installing the projects dependencies. This step will take a while as I have made use of many libraries and frameworks to save on development time.
+Start by installing the project's dependencies. This step will take a while as I have made use of many libraries and frameworks to save on development time.
 ```
 npm install
 ```
@@ -76,13 +76,13 @@ Here are some of the frameworks and libraries used in the project:
 - Other smaller libs
 
 ### Make it right
-I think using these libraries was the smart thing to do and allowed me to implement a half decent little app. But one thing I would definately correct if this was a long term project is that I depend directly on most of those third-party libraries. To save time, I have skipped the step I would normally take of wrapping these dependencies using something like the Adapter pattern to allow for easier testing and change of implementation if needed.
+I think using these libraries was the smart thing to do and allowed me to implement a half decent little app. But one thing I would definitely correct if this was a long term project is that I depend directly on most of those third-party libraries. To save time, I have skipped the step I would normally take of wrapping these dependencies using something like the Adapter pattern to allow for easier testing and change of implementation if needed.
 
 Another thing that I have skipped is writing proper automated tests. I'm a fan of TDD, and I did write a few exploratory tests to see how some of these third-party libraries worked but they were of poor quality and I opted not to keep them in the project as they had served their purpose.
 
 Finally, in terms of code quality, I have made an effort to keep my functions and classes at a relatively managable size but the current state of the code reflects the fact that I focused first on making it work and had very little time to refactor the code. I would normally break the classes and functions down even more. I also occasionally use magic strings and numbers and some duplication.
 
 ### Make it fast
-Finally, in terms of performance, there is so much I can improve there. At first, I tried using the [directory-tree](https://www.npmjs.com/package/directory-tree) library to get a tree data structure from the file system. It offers a nice API, easy to use and has a decent amount of downloads on NPM and stars on Github. But after trying it I was very disapointed in it's performance. It is soooooo slow. I ended up writing my own asynchronous Depth First Search algorithm to walk directory trees and in my benchmarks, my algorithm was more than 6 times faster. As a matter of fact, once I'm done with the current project I'm definately going to make an NPM package out of it and offer it as a faster alternative to [directory-tree](https://www.npmjs.com/package/directory-tree).
+Finally, in terms of performance, there is so much I can improve there. At first, I tried using the [directory-tree](https://www.npmjs.com/package/directory-tree) library to get a tree data structure from the file system. It offers a nice,  easy to use, API and has a decent amount of downloads on NPM and stars on Github. But after trying it I was very disapointed in its performance. It doesn't work asynchronously and is soooooo slow. I ended up writing my own asynchronous Depth First Search algorithm to walk directory trees and in my benchmarks, my algorithm was more than 6 times faster. As a matter of fact, once I'm done with the current project I'm definitely going to make an NPM package out of it and offer it as a faster alternative to [directory-tree](https://www.npmjs.com/package/directory-tree).
 
-Still, there is much than can be done to improve the app's performance. If you're crazy enough to try to run it on your system's root directory, or other wide and deep enough directory tree, the app will take a good amount of time to get a result on scree. In some cases the operation will just fail. I know the technical reasons why, and have tons of ideas to improve this (limit the depth of the tree walk, build the tree incrementally and asynchronously, write a walker in Rust and get NodeJS to interop with it 😆) but I didn't have the time to tackle these.
+Still, there is much than can be done to improve the app's performance. If you're crazy enough to try to run it on your system's root directory, or other wide and deep enough directory trees, the app will take a good amount of time to get a result on screen. In some cases the operation will just fail. I know the technical reasons why, and have tons of ideas to improve this (limit the depth of the tree walk, build the tree incrementally and asynchronously, write a walker in Rust and get NodeJS to interop with it 😆) but I didn't have the time to tackle these.
